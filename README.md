@@ -11,6 +11,9 @@ To install the application, follow these steps:
 3. Set up your OpenAI API key: [Instructions here](https://beta.openai.com/docs/quickstart)
 4. Start the application: `python app.py`
 
+## Example web
+![Chatbot Image](chatbot.png)
+
 ## Usage
 
 Once the application is running, you can access it by navigating to `http://localhost:5000` in your web browser. Enter a message in the input field and press "Send" to generate a response from GPT-3.
