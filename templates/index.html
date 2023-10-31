@@ -1,0 +1,128 @@
+<!-- 
+    Create a Flask app for web application chatbot using engine openai
+- Framework model chatbot module: openai
+- Framework web application: Flask
+- Framework frontend web application: Vue.js
+- Storage data local a simple
+
+Detail:
+- Flask app: app.py
+- Vue.js app: index.html using CDN
+- Storage data: data.json
+- Engine chatbot: openai (gpt-3.5-turbo) like a api POST https://api.openai.com/v1/chat/completions
+- Fetch to this api https://api.openai.com/v1/chat/completions condition is Qestion and Answer for chatbot
+
+Example:
+curl https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant." # Answer
+      },
+      {
+        "role": "user",
+        "content": "Hello!" # Question
+      }
+    ]
+  }'
+
+*make api for create chatbot from above example api
+
+
+for frontend web application:
+- Vue.js app: index.html using CDN
+- fetch api to Flask app for get data from storage data local http://127.0.0.1:5000/chatbot
+
+Author: Watcharapon Weeraborirak
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot</title>
+    <link rel="stylesheet" href
+    ="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    <!-- vue.js cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- axios cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 offset-md-3 mt-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h1 class="text-center">Chatbot</h1>
+                        </div>
+                        <div class="card-body">
+                            <div class="chatbox">
+                                <div class="chatbox__messages">
+                                    <div class="message" v-for="(message, k) in messages" :key="k">
+                                        <div class="card">
+                                            <div class="card-body">
+                                            <p><span style="color: red">Question</span> [[message.question]]</p>
+                                            <p><span style="color: red">Answer</span> [[ message.content ]]</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="spinner-border text-primary" role="status" v-if="isLoading">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="chatbox__input">
+                                    <input type="text" class="form-control" placeholder="Type a message..." v-model="message" @keyup.enter="sendMessage">
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '',
+            messages: [],
+            isLoading: false,
+        },
+        delimiters : ['[[', ']]'],
+        methods: {
+            async sendMessage() {
+                this.isLoading = true;
+                await axios.post('http://127.0.0.1:5000/chatbot', {
+                    message: this.message
+                }).then(response => {
+                    console.log(response.data.message);
+                    this.messages.push({
+                        role: 'system',
+                        question: this.message,
+                        content: response.data.message
+                    });
+                    this.message = '';
+                });
+                this.isLoading = false;
+            }
+        },
+
+    });
+</script>
+
