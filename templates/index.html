@@ -1,41 +1,24 @@
 <!-- 
-    Create a Flask app for web application chatbot using engine openai
-- Framework model chatbot module: openai
-- Framework web application: Flask
-- Framework frontend web application: Vue.js
-- Storage data local a simple
+Create UI for chatbot for user to interact pass message to chatbot and get response from chatbot
+- Create UI for chatbot
+- Create UI for input message
+- Create function to get data from chatbot and display on UI "/get-data" GET
+- Create function to send message to chatbot and get response from chatbot "/chatbot" POST
+- Create function to display loading icon when waiting for response from chatbot
+- Create function to display message from user and response from chatbot
+- Create function to display message from chatbot when user send message to chatbot
 
-Detail:
-- Flask app: app.py
-- Vue.js app: index.html using CDN
-- Storage data: data.json
-- Engine chatbot: openai (gpt-3.5-turbo) like a api POST https://api.openai.com/v1/chat/completions
-- Fetch to this api https://api.openai.com/v1/chat/completions condition is Qestion and Answer for chatbot
+Backend API
+- /get-data GET Fetch data using axios
+- /chatbot POST Fetch data using axios
 
-Example:
-curl https://api.openai.com/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -d '{
-    "model": "gpt-3.5-turbo",
-    "messages": [
-      {
-        "role": "system",
-        "content": "You are a helpful assistant." # Answer
-      },
-      {
-        "role": "user",
-        "content": "Hello!" # Question
-      }
-    ]
-  }'
+Tools
+- Import vue.js from cdn
+- Import axios from cdn
+- Import bootstrap from cdn
 
-*make api for create chatbot from above example api
-
-
-for frontend web application:
-- Vue.js app: index.html using CDN
-- fetch api to Flask app for get data from storage data local http://127.0.0.1:5000/chatbot
+*while using axios to fetch data from backend, we need to use async await to wait for response from backend
+*create function to display loading icon when waiting for response from backend
 
 Author: Watcharapon Weeraborirak
  -->
@@ -45,9 +28,6 @@ Author: Watcharapon Weeraborirak
 <head>
     <meta charset="UTF-8">
     <title>Chatbot</title>
-    <link rel="stylesheet" href
-    ="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="static/css/style.css">
     <!-- vue.js cdn -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- axios cdn -->
