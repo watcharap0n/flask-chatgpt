@@ -71,7 +71,7 @@ Author: Watcharapon Weeraborirak
                                         <div class="card">
                                             <div class="card-body">
                                             <p><span style="color: red">Question</span> [[message.question]]</p>
-                                            <p><span style="color: red">Answer</span> [[ message.content ]]</p>
+                                            <p><span style="color: red">Answer</span> [[ message.answer ]]</p>
                                             </div>
                                         </div>
                                     </div>
@@ -105,7 +105,21 @@ Author: Watcharapon Weeraborirak
             isLoading: false,
         },
         delimiters : ['[[', ']]'],
+        created() {
+            this.getData();
+        },
         methods: {
+            async getData(){
+                const path = 'http://127.0.0.1:5000/get-data';
+                await axios.get(path)
+                .then((res)=>{
+                    console.log(res.data);
+                    this.messages = res.data;
+                })
+                .catch((err)=>{
+                    console.log(err);
+                })
+            },
             async sendMessage() {
                 this.isLoading = true;
                 await axios.post('http://127.0.0.1:5000/chatbot', {
@@ -113,9 +127,8 @@ Author: Watcharapon Weeraborirak
                 }).then(response => {
                     console.log(response.data.message);
                     this.messages.push({
-                        role: 'system',
                         question: this.message,
-                        content: response.data.message
+                        answer: response.data.answer
                     });
                     this.message = '';
                 });

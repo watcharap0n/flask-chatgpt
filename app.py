@@ -1,6 +1,5 @@
 """
 Create a Flask app for web application chatbot using engine openai
-- Framework model chatbot module: openai
 - Framework web application: Flask
 - Framework frontend web application: Vue.js
 - Storage data local a simple
@@ -9,7 +8,6 @@ Detail:
 - Flask app: app.py
 - Vue.js app: index.html using CDN
 - Storage data: data.json
-- Engine chatbot: openai (gpt-3.5-turbo) like a api POST https://api.openai.com/v1/chat/completions
 - Fetch to this api https://api.openai.com/v1/chat/completions condition is Qestion and Answer for chatbot
 
 Example:
@@ -30,10 +28,11 @@ curl https://api.openai.com/v1/chat/completions \
     ]
   }'
 
-*make api for create chatbot from above example api
+*make api for chatbot from example above
 
 APIs:
 - GET / return index.html
+- GET /get-data return data.json
 - POST /chatbot payload: {message: 'Hello!'} return {message: 'Answer', role: 'system'}
 
 Author: Watcharapon Weeraborirak
@@ -61,14 +60,21 @@ load_dotenv()
 # Message is undefined it error frontend
 if not os.path.exists("data.json"):
     with open("data.json", "w") as f:
-        json.dump({}, f)
-
+        json.dump([], f)
 
 
 # Route index
 @app.route("/")
 def index():
     return render_template("index.html")
+
+# Route to get data from json
+@app.route("/get-data")
+def get_data():
+    with open("data.json", "r") as f:
+        data = json.load(f)
+    return jsonify(data)
+
 
 # Route chatbot
 @app.route("/chatbot", methods=["POST"])
@@ -109,7 +115,18 @@ def chatbot():
     # Get data from openai api
     data_response = response.json()
     answer = data_response['choices'][-1]['message']['content']
-    return jsonify({'message': answer, 'role': 'system'})
+    
+    # Get data from data.json
+    with open("data.json", "r") as f:
+        data = json.load(f)
+
+    data.append({"question": question, "answer": answer})
+
+    # Save data to data.json
+    with(open("data.json", "w")) as f:
+        json.dump(data, f)
+
+    return jsonify({'answer': answer})
 
 
 
