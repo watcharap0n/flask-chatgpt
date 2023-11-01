@@ -125,7 +125,6 @@ Author: Watcharapon Weeraborirak
                 await axios.post('http://127.0.0.1:5000/chatbot', {
                     message: this.message
                 }).then(response => {
-                    console.log(response.data.message);
                     this.messages.push({
                         question: this.message,
                         answer: response.data.answer
