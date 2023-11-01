@@ -32,6 +32,10 @@ curl https://api.openai.com/v1/chat/completions \
 
 *make api for create chatbot from above example api
 
+APIs:
+- GET / return index.html
+- POST /chatbot payload: {message: 'Hello!'} return {message: 'Answer', role: 'system'}
+
 Author: Watcharapon Weeraborirak
 """
 
@@ -66,27 +70,12 @@ if not os.path.exists("data.json"):
 def index():
     return render_template("index.html")
 
-# Route get data
-@app.route("/get-data", methods=["GET"])
-def get_data():
-    # Get data from json file
-    with open("data.json", "r") as f:
-        data = json.load(f)
-
-    # Return data to frontend
-    return jsonify(data)
-
 # Route chatbot
 @app.route("/chatbot", methods=["POST"])
 def chatbot():
+
     # Get data from frontend
     data = request.get_json()
-
-    # Get data from json file
-    with open("data.json", "r") as f:
-        data_json = json.load(f)
-
-    # Get question from frontend
     question = data["message"]
 
     # Set data for openai api
@@ -119,9 +108,7 @@ def chatbot():
 
     # Get data from openai api
     data_response = response.json()
-    # Get answer from openai api
     answer = data_response['choices'][-1]['message']['content']
-    # Return data to frontend
     return jsonify({'message': answer, 'role': 'system'})
 
 
